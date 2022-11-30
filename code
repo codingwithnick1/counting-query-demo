@@ -1,0 +1,28 @@
+function countCarBrands(){
+// Get the data
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+  const last = sheet.getLastRow()-1
+  const brands = sheet.getRange(2,1,last).getValues().flat()
+
+// Use JavaScript reduce function to count the number of occurrences as an object
+  const countedBrands = brands.reduce((a,b) => (b in a ? a[b]++ : a[b] = 1, a), {})
+
+// Convert the object to an array, switch column order and sort
+  const brandsArray = Object.entries(countedBrands)
+            .map(x => x.reverse())
+            .sort(compare)
+
+  function compare(a,b) {
+          if(a[0] > b[0]) return -1; 
+          if(a[0] < b[0]) return 1;
+          if(a[1] < b[1]) return -1;
+          if(a[1] > b[1]) return 1;
+          return 0
+    }
+
+  
+  // Paste the array back to the sheet
+  sheet.getRange(2,6,last,2).clear()
+  sheet.getRange(2,6,brandsArray.length,2).setValues(brandsArray)
+
+}
