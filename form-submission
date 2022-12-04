@@ -1,0 +1,28 @@
+function modifyData(){
+  //Get data
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+  const last = sheet.getLastRow()
+  const data = sheet.getRange(last,1,1,6).getValues()
+
+  //Modify data
+  data[0][1] = toTitleCase(data[0][1])
+  data[0][3] = toTitleCase(data[0][3])
+  data[0][4] = toTitleCase(data[0][4])
+
+
+//Paste data back to sheet
+  sheet.getRange(last,1,1,6).setValues(data)
+
+}
+
+
+
+//Create the title case function
+function toTitleCase(str){
+  return str.replace(
+    /\w+/gi,
+    function(txt){
+      return txt[0].toUpperCase() + txt.slice(1).toLowerCase()
+    }
+  )
+}
