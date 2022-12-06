@@ -1,0 +1,40 @@
+function getEmailsAndPaste(){
+
+  //Get the active sheet
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+
+  //Get all email threads
+  const threads = GmailApp.getInboxThreads()
+
+  let i = 2
+
+  //Loop over each thread
+  threads.forEach(thread=> {
+    
+    const msgs = thread.getMessages()
+//Then loop over each message
+  msgs.forEach(msg => {
+
+  //Extract the date, email, subject and content
+    const date = msg.getDate()
+    let email = extractEmail(msg.getFrom())
+    email = email.length ? email[0] : 'N/A'
+
+    const subject = msg.getSubject()
+    const content = msg.getPlainBody()
+
+  //Paste the extracted data to the sheet
+    const vals = [[date, email, subject, content]]
+
+    sheet.getRange(i, 1, 1, 4).setValues(vals)
+    i++
+  
+    })
+  })
+}
+
+
+function extractEmail(text) {
+  return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
+}
+
